@@ -1,8 +1,8 @@
 plugins {
     id("java")
+    id("com.github.johnrengelman.shadow") version "7.1.2" // Shadow 플러그인 추가
 }
 
-group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -17,6 +17,23 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            "Main-Class" to "Main"
+        )
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.shadowJar {
+    version = "1.0-SNAPSHOT"
 }

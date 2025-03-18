@@ -23,7 +23,8 @@ public class Writer {
                 Cell writeCell = appendRow.createCell(0);
                 writeCell.setCellValue(blNumber.getBlNumber());
             } else {
-                ExceptionMessage.appendMessage("ALL 시트가 없습니다.");
+                sheetAll = workbook.createSheet("ALL");
+                sheetAll.createRow(0).createCell(0).setCellValue(blNumber.getBlNumber());
             }
 
             // 개별 시트 로직

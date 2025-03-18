@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.net.URL;
 
 public class View {
 
@@ -15,6 +16,13 @@ public class View {
 
     private void createAndShowGUI() {
         JFrame frame = new JFrame("BL Number Generator for 시윤♡");
+
+        URL iconUrl = getClass().getResource("/icon.png");
+        if (iconUrl != null) {
+            ImageIcon icon = new ImageIcon(iconUrl);
+            frame.setIconImage(icon.getImage());
+        }
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(450, 450);
         frame.setLayout(new GridLayout(8, 2, 5, 5));
