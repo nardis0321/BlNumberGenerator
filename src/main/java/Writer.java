@@ -12,7 +12,9 @@ import java.io.IOException;
 
 public class Writer {
 
-    public static void writeBlNumberToExcel(File file, BlNumber blNumber) {
+    public static void writeBlNumberToExcel(BlNumber blNumber) {
+        File file = blNumber.getEXCEL_FILE();
+
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             Workbook workbook = new XSSFWorkbook(fileInputStream);
 
