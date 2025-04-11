@@ -14,61 +14,52 @@ import java.io.IOException;
 
 public class Writer {
 
-    public static void writeBlNumberToExcel(BlNumber blNumber) {
+    public static void writeToExcel(BlNumber blNumber) {
         File file = blNumber.getEXCEL_FILE();
 
         try (
                 FileInputStream fileInputStream = new FileInputStream(file);
                 Workbook workbook = new XSSFWorkbook(fileInputStream)
         ) {
+            // 1. All 시트에 bl번호 넣기
+            Sheet sheetNameAll = workbook.getSheet("ALL");
+            if(sheetNameAll == null) sheetNameAll = workbook.createSheet("ALL");
+            writeBlNumbers(sheetNameAll, blNumber);
 
-            // All에 넣기
-            Sheet sheetAll = workbook.getSheet("ALL");
-            if(sheetAll != null){
-                Row appendRow = sheetAll.createRow(sheetAll.getLastRowNum()+1);
-                Cell writeCell = appendRow.createCell(0);
-                writeCell.setCellValue(blNumber.getBlNumber());
-            } else {
-                sheetAll = workbook.createSheet("ALL");
-                sheetAll.createRow(0).createCell(0).setCellValue(blNumber.getBlNumber());
-            }
-
-            // 개별 시트 로직
-
-            String sheetName = blNumber.getOrigin() + ">" + blNumber.getDESTINATION();
+            // 2. 개별 시트에 난수 넣기
+            String sheetName = blNumber.getORIGIN() + ">" + blNumber.getDESTINATION();
             Sheet sheet = workbook.getSheet(sheetName);
+            if(sheet == null) sheet = workbook.createSheet(sheetName);
+            writeRandom4Digit(sheet, blNumber);
 
-            if(sheet != null) {
-
-                // 새로운 행을 시트의 마지막에 추가
-                int lastRowNum = sheet.getLastRowNum();
-                Row newRow = sheet.createRow(lastRowNum + 1);
-
-                // 새 행의 첫 번째 셀에 blNumber 값을 넣기
-                Cell newCell = newRow.createCell(0);
-                newCell.setCellValue(blNumber.getStringNumber());
-
-                // 엑셀 파일에 변경 사항 저장
-                try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                    workbook.write(outputStream);
-                }
-            } else {
-                sheet = workbook.createSheet(sheetName);
-
-                // 첫 번째 행 생성
-                Row row = sheet.createRow(0);
-                Cell cell = row.createCell(0);
-                cell.setCellValue(blNumber.getStringNumber());  // BlNumber의 값을 셀에 작성
-
-                // 엑셀 파일에 변경 사항 저장
-                try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                    workbook.write(outputStream);
-                }
+            // 3. 엑셀 파일에 변경 사항 저장
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                workbook.write(outputStream);
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "쓰기 작업 도중 오류가 발생했습니다. \n" + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
             throw new RuntimeException();
         }
+    }
+
+    private static void writeBlNumbers(Sheet sheetNameAll, BlNumber blNumber) {
+        blNumber.getBlNumbers().forEach(bl -> {
+            Row row = sheetNameAll.createRow(getNextRowNum(sheetNameAll));
+            Cell cell = row.createCell(0);
+            cell.setCellValue(bl);
+        });
+    }
+
+    private static void writeRandom4Digit(Sheet sheet, BlNumber blNumber){
+        Row row = sheet.createRow(getNextRowNum(sheet));
+        Cell cell = row.createCell(0);
+        cell.setCellValue(blNumber.getRandom4DigitFormatted());
+    }
+
+    private static int getNextRowNum(Sheet sheet){
+        if(sheet.getPhysicalNumberOfRows() == 0) return 0;
+
+        return sheet.getLastRowNum()+1;
     }
 
 }

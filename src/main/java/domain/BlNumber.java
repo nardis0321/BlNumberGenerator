@@ -2,6 +2,8 @@ package domain;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlNumber {
 
@@ -62,6 +64,16 @@ public class BlNumber {
 
     public String getBlNumber(){
         return String.format("%s%s%s%04d%02d", PREFIX, ORIGIN, DESTINATION, random4Digit, SPLIT_SEQUENCE);
+    }
+
+    public List<String> getBlNumbers() {
+        List<String> blNumbers = new ArrayList<>();
+        for (int i = 0; i <= SPLIT_SEQUENCE; i++) {
+            blNumbers.add(
+                    String.format("%s%s%s%04d%02d", PREFIX, ORIGIN, DESTINATION, random4Digit, i)
+            );
+        }
+        return blNumbers;
     }
 
     public File getEXCEL_FILE(){
