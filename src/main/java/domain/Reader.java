@@ -46,8 +46,7 @@ public class Reader {
         } catch (MissingSheetException e) {
             JOptionPane.showMessageDialog(null, "시트에 없는 새로운 출발지>도착지입니다.", "오류", JOptionPane.WARNING_MESSAGE);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "검증 작업에서 알 수 없는 오류가 발생했습니다. 프로그램이 종료됩니다. \n" + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
+            JOptionPane.showMessageDialog(null, "검증 작업에서 알 수 없는 오류가 발생했습니다. \n" + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
         }
 
         return true;

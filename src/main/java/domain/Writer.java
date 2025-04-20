@@ -19,10 +19,21 @@ public class Writer {
     public static void writeToExcel(BlNumber blNumber) {
         File file = blNumber.getEXCEL_FILE();
 
+        File tempFile = new File(file.getParentFile(), file.getName() + System.currentTimeMillis());
+        if (file.exists()) {
+            try {
+                Files.copy(file.toPath(), tempFile.toPath());
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null,
+                        "임시 파일 작업 도중 오류가 발생했습니다. \n" + e.getMessage(),
+                        "오류", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
         try (
-                FileInputStream fileInputStream = new FileInputStream(file);
+                FileInputStream fileInputStream = new FileInputStream(tempFile);
                 Workbook workbook = new XSSFWorkbook(fileInputStream);
-                FileOutputStream outputStream = new FileOutputStream(file)
+                FileOutputStream outputStream = new FileOutputStream(tempFile)
         ) {
             // 1. All 시트에 bl번호 넣기
             Sheet sheetNameAll = workbook.getSheet("ALL");
@@ -42,18 +53,28 @@ public class Writer {
             if(sheet == null) sheet = workbook.createSheet(sheetName);
             writeRandom4Digit(sheet, blNumber);
 
-            // 3. 엑셀 파일에 변경 사항 저장
+            // 3. 엑셀 임시 파일에 변경 사항 저장
             workbook.write(outputStream);
-
-            // 4. 백업 파일 만들기
             outputStream.flush();
-            String backupFileName = file.getName().replace(".xlsx", "") + "_backup.xlsx";
-            File backupFile = new File(file.getParent(), backupFileName);
-            Files.copy(file.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
+            // 4. 원본으로 저장
+            if (file.exists()) {
+                file.delete();
+            }
+            if (!tempFile.renameTo(file)) {
+                Files.copy(tempFile.toPath(), file.toPath(),
+                        StandardCopyOption.REPLACE_EXISTING);
+                tempFile.delete();
+            }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "쓰기 작업 도중 오류가 발생했습니다. \n" + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
-            throw new RuntimeException();
+            JOptionPane.showMessageDialog(null,
+                    "쓰기 작업 도중 입출력 오류가 발생했습니다. \n" + e.getMessage(),
+                    "오류", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            tempFile.delete();
+            JOptionPane.showMessageDialog(null,
+                    "쓰기 작업 도중 오류가 발생했습니다. \n" + e.getMessage(),
+                    "오류", JOptionPane.ERROR_MESSAGE);
         }
     }
 
