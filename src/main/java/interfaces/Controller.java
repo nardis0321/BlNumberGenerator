@@ -21,9 +21,7 @@ public class Controller {
             view.displayInfoMessage("BL 번호 생성 완료: " + blNumber.getRandom4Digit());
 
             StringBuilder resultBuilder = new StringBuilder();
-            blNumber.getBlNumbers().forEach(bl -> {
-                resultBuilder.append(bl).append("\n");
-            });
+            blNumber.getBlNumbers().forEach(bl -> resultBuilder.append(bl).append("\n"));
             view.displayResult(resultBuilder.toString());
         } catch (Exception e) {
             view.displayInfoMessage("에러 발생! " + e.getMessage());

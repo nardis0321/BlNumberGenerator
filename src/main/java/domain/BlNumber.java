@@ -59,10 +59,6 @@ public class BlNumber {
         return DESTINATION;
     }
 
-    public String getBlNumber(){
-        return String.format("%s%s%s%04d%02d", PREFIX, ORIGIN, DESTINATION, random4Digit, SPLIT_SEQUENCE);
-    }
-
     public List<String> getBlNumbers() {
         List<String> blNumbers = new ArrayList<>();
         for (int i = 0; i <= SPLIT_SEQUENCE; i++) {
