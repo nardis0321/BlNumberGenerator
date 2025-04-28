@@ -29,16 +29,13 @@ public class BlNumber {
                     JOptionPane.WARNING_MESSAGE
             );
             if (option == JOptionPane.NO_OPTION) {
-                throw new RuntimeException();
+                throw new RuntimeException("진행 여부에 대한 입력값이 없습니다.");
             }
         }
 
         EXCEL_FILE = new File(EXCEL_FILE_PATH);
         if (!EXCEL_FILE.exists()) {
-            JOptionPane.showMessageDialog(null,
-                    "파일이 존재하지 않습니다: " + EXCEL_FILE.getAbsolutePath()
-                    , "오류", JOptionPane.ERROR_MESSAGE);
-            throw new RuntimeException();
+            throw new RuntimeException("파일이 존재하지 않습니다: " + EXCEL_FILE.getAbsolutePath());
         }
     }
 

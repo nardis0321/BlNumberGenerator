@@ -72,14 +72,10 @@ public class Writer {
                 tempFile.delete();
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,
-                    "쓰기 작업 도중 입출력 오류가 발생했습니다. \n" + e.getMessage(),
-                    "오류", JOptionPane.ERROR_MESSAGE);
+            throw new RuntimeException("파일 쓰기 실패: 입출력 오류 \n" + e.getMessage(), e);
         } catch (Exception e) {
             tempFile.delete();
-            JOptionPane.showMessageDialog(null,
-                    "쓰기 작업 도중 오류가 발생했습니다. \n" + e.getMessage(),
-                    "오류", JOptionPane.ERROR_MESSAGE);
+            throw new RuntimeException("파일 쓰기 실패: \n" + e.getMessage(), e);
         }
     }
 

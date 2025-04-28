@@ -16,8 +16,7 @@ public class BlNumberDto {
 
         public RegisterRequest(String origin, String destination, int splitSequence) {
             if(!isValidString(origin) || !isValidString(destination)) {
-                JOptionPane.showMessageDialog(null, "옳지 않은 origin/destination이 입력되었습니다."+origin+" > "+destination, "입력 오류", JOptionPane.ERROR_MESSAGE);
-                throw new RuntimeException();
+                throw new RuntimeException("옳지 않은 origin/destination : "+origin+" > "+destination);
             }
 
             this.origin = origin;

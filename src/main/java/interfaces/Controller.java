@@ -26,7 +26,7 @@ public class Controller {
             });
             view.displayResult(resultBuilder.toString());
         } catch (Exception e) {
-            view.displayInfoMessage("에러 발생: " + e.getMessage());
+            view.displayInfoMessage("에러 발생! " + e.getMessage());
         }
     }
 }
