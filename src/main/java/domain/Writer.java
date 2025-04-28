@@ -17,7 +17,8 @@ import java.nio.file.StandardCopyOption;
 public class Writer {
 
     public static void writeToExcel(BlNumber blNumber) {
-        File file = blNumber.getEXCEL_FILE();
+        final String all = "ALL";
+        final File file = blNumber.getEXCEL_FILE();
 
         File tempFile = new File(file.getParentFile(), file.getName() + System.currentTimeMillis());
         if (file.exists()) {
@@ -36,11 +37,11 @@ public class Writer {
                 FileOutputStream outputStream = new FileOutputStream(tempFile)
         ) {
             // 1. All 시트에 bl번호 넣기
-            Sheet sheetNameAll = workbook.getSheet("ALL");
+            Sheet sheetNameAll = workbook.getSheet(all);
             if(sheetNameAll == null) {
-                int sheetIndex = workbook.getSheetIndex(sheetNameAll);
+                int sheetIndex = workbook.getSheetIndex(all);
                 if(sheetIndex == -1){
-                    sheetNameAll = workbook.createSheet("ALL");
+                    sheetNameAll = workbook.createSheet(all);
                 } else {
                     sheetNameAll = workbook.getSheetAt(sheetIndex);
                 }
@@ -56,6 +57,10 @@ public class Writer {
             // 3. 엑셀 임시 파일에 변경 사항 저장
             workbook.write(outputStream);
             outputStream.flush();
+
+            workbook.close();
+            fileInputStream.close();
+            outputStream.close();
 
             // 4. 원본으로 저장
             if (file.exists()) {
